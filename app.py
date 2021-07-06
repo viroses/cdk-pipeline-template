@@ -7,7 +7,7 @@ from aws_cdk import (
     core
 )
 
-from pipeline_stack.cdk_pipeline_stack import CdkPipelineStack as pipeline
+from pipeline_stack import CdkPipelineStack as pipeline
 
 app = core.App()
 secret_name = app.node.try_get_context("secret_name")
