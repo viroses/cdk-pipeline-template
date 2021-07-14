@@ -17,6 +17,10 @@ class Network(core.NestedStack):
                     name='isolated',
                     subnet_type=ec2.SubnetType.ISOLATED,
                     cidr_mask=24
-                )
+                ),
+                ec2.SubnetConfiguration(
+                    name='public',
+                    subnet_type=ec2.SubnetType.public,
+                    cidr_mask=24)
             ]
         )
