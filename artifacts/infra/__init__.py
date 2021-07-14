@@ -11,7 +11,7 @@ class Network(core.NestedStack):
         self.vpc = ec2.Vpc(self, "scenario-vpc",
             cidr="10.100.0.0/16",
             max_azs=2,
-            nat_gateways=0,
+            nat_gateways=1,
             subnet_configuration=[
                 ec2.SubnetConfiguration(
                     name='isolated',
