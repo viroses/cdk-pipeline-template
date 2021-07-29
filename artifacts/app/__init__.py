@@ -36,7 +36,7 @@ class Application(core.NestedStack):
             # Use an image from DockerHub
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
         )
-        
+
         log_container = fargate_task_definition.add_firelens_log_router("LogContainer",
             firelens_config=ecs.FirelensConfig(
                 type=ecs.FirelensLogRouterType.FLUENTBIT
