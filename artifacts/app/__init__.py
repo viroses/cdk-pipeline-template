@@ -38,7 +38,9 @@ class Application(core.NestedStack):
         )
         
         log_container = fargate_task_definition.add_firelens_log_router("LogContainer",
-            #FirelensConfig.type=fluentbit,
+            firelens_config=ecs.FirelensConfig(
+                type=ecs.FirelensLogRouterType.FLUENTBIT
+            ),
             image=ecs.ContainerImage.from_registry("906394416424.dkr.ecr.ap-northeast-2.amazonaws.com/aws-for-fluent-bit:latest")
         )
         
