@@ -8,7 +8,7 @@ class Aurora(core.NestedStack):
 
     def __init__(self, scope: core.Construct, id: str, bmt_vpc: ec2.Vpc, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
-
+        
         db_subnet_group = rds.SubnetGroup(self, 'Aurora',
             description='aurora subnet group',
             vpc=bmt_vpc,

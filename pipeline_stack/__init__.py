@@ -16,7 +16,6 @@ class DeployStage(core.Stage):
 
         SampleScenarioStack(self, 'Sample')
 
-
 class CdkPipelineStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, params: dict, **kwargs):
         super().__init__(scope, id, **kwargs)

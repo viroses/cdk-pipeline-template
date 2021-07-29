@@ -2,6 +2,7 @@ from aws_cdk import core
 from artifacts import (
     infra,
     db,
+    app,
 )
 
 class SampleScenarioStack(core.Stack):
@@ -11,3 +12,4 @@ class SampleScenarioStack(core.Stack):
 
         network = infra.Network(self, 'Network')
         db.Aurora(self, 'Aurora', bmt_vpc=network.vpc)
+        app.Application(self, 'Application', bmt_vpc=network.vpc)
