@@ -23,6 +23,7 @@ class Application(core.NestedStack):
         web_container = fargate_task_definition.add_container("WebContainer",
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
             logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream"),
+            port_mappings=[{"containerPort": 80}],
             memory_limit_mib=512,
             cpu=256
         )
