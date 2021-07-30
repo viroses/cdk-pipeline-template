@@ -16,17 +16,18 @@ class Application(core.NestedStack):
         # )
         
         fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
-            memory_limit_mib=2048,
-            cpu=1024
+            memory_limit_mib=1024,
+            cpu=512
         )
         
         web_container = fargate_task_definition.add_container("WebContainer",
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
-            port_mappings=[{"container_port": 80}],
-            logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream")
-            # memory_limit_mib=512,
-            # cpu=256
+            logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream"),
+            memory_limit_mib=512,
+            cpu=256
         )
+        
+        # web_container.add_port_mappings(ecs.PortMapping(80))
         
         # fargate_task_definition.add_firelens_log_router("LogContainer",
         #     firelens_config=ecs.FirelensConfig(
