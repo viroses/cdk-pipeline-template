@@ -16,14 +16,14 @@ class Application(core.NestedStack):
         # )
         
         fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
-            memory_limit_mib=512,
+            memory_limit_mib=2048,
             cpu=1024
         )
         
         web_container = fargate_task_definition.add_container("WebContainer",
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
             # port_mappings=ecs.PortMapping[80],
-            # logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream")
+            logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream"),
             memory_limit_mib=512,
             cpu=256
         )
