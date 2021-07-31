@@ -3,6 +3,7 @@ from aws_cdk import (
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecr as ecr,
+    aws_elasticloadbalancingv2 as elbv2,
 )
 
 class Application(core.NestedStack):
@@ -10,10 +11,10 @@ class Application(core.NestedStack):
     def __init__(self, scope: core.Construct, id: str, bmt_vpc: ec2.Vpc, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
         
-        # cluster = ecs.Cluster(self,"ObservationCluster",
-        #     enable_fargate_capacity_providers=True,
-        #     vpc=bmt_vpc
-        # )
+        cluster = ecs.Cluster(self,"ObservationCluster",
+            enable_fargate_capacity_providers=True,
+            vpc=bmt_vpc
+        )
         
         fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
             memory_limit_mib=1024,
@@ -27,20 +28,23 @@ class Application(core.NestedStack):
             memory_limit_mib=512,
             cpu=256
         )
-        
-        # web_container.add_port_mappings(ecs.PortMapping(80))
-        
-        # fargate_task_definition.add_firelens_log_router("LogContainer",
-        #     firelens_config=ecs.FirelensConfig(
-        #         type=ecs.FirelensLogRouterType.FLUENTBIT
-        #     ),
-        #     image=ecs.ContainerImage.from_registry("906394416424.dkr.ecr.ap-northeast-2.amazonaws.com/aws-for-fluent-bit"),
-        #     logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream")
-        # )
 
-        # # Instantiate an Amazon ECS Service
-        # ecs_service = ecs.FargateService(self, "Service",
-        #     cluster=cluster,
-        #     task_definition=fargate_task_definition,
-        #     desired_count=3
-        # )
+        # Instantiate an Amazon ECS Service
+        ecs_service = ecs.FargateService(self, "ECSService",
+            cluster=cluster,
+            task_definition=fargate_task_definition,
+            desired_count=3
+        )
+
+        lb = elbv2.ApplicationLoadBalancer(self, "ServiceLB", vpc=bmt_vpc, internet_facing=True)
+        listener = lb.add_listener("Listener", port=80)
+        ecs_service.register_load_balancer_targets(
+            ecs.EcsTarget(
+                container_name="WebContainer",
+                container_port=80,
+                new_target_group_id="ECSTarget",
+                listener=ecs.ListenerConfig.application_listener(listener,
+                    protocol=elbv2.ApplicationProtocol.HTTP
+                )
+            )
+        )
