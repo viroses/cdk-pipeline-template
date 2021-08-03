@@ -28,23 +28,23 @@ class Application(core.NestedStack):
             memory_limit_mib=512,
             cpu=256
         )
+        
+        # # Instantiate an Amazon ECS Service
+        # ecs_service = ecs.FargateService(self, "ECSService",
+        #     cluster=cluster,
+        #     task_definition=fargate_task_definition,
+        #     desired_count=3
+        # )
 
-        # Instantiate an Amazon ECS Service
-        ecs_service = ecs.FargateService(self, "ECSService",
-            cluster=cluster,
-            task_definition=fargate_task_definition,
-            desired_count=3
-        )
-
-        lb = elbv2.ApplicationLoadBalancer(self, "ServiceLB", vpc=bmt_vpc, internet_facing=True)
-        listener = lb.add_listener("Listener", port=80)
-        ecs_service.register_load_balancer_targets(
-            ecs.EcsTarget(
-                container_name="WebContainer",
-                container_port=80,
-                new_target_group_id="ECSTarget",
-                listener=ecs.ListenerConfig.application_listener(listener,
-                    protocol=elbv2.ApplicationProtocol.HTTP
-                )
-            )
-        )
+        # lb = elbv2.ApplicationLoadBalancer(self, "ServiceLB", vpc=bmt_vpc, internet_facing=True)
+        # listener = lb.add_listener("Listener", port=80)
+        # ecs_service.register_load_balancer_targets(
+        # ecs.EcsTarget(
+        #         container_name="WebContainer",
+        #         container_port=80,
+        #         new_target_group_id="ECSTarget",
+        #         listener=ecs.ListenerConfig.application_listener(listener,
+        #             protocol=elbv2.ApplicationProtocol.HTTP
+        #         )
+        #     )
+        # )
