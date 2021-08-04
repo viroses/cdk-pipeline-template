@@ -16,25 +16,25 @@ class Application(core.NestedStack):
             vpc=bmt_vpc
         )
         
-        fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
-            memory_limit_mib=1024,
-            cpu=512
-        )
+        # fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
+        #     memory_limit_mib=1024,
+        #     cpu=512
+        # )
         
-        web_container = fargate_task_definition.add_container("WebContainer",
-            image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
-            logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream"),
-            port_mappings=[{"containerPort": 80}], # it makes me crazy!!!
-            memory_limit_mib=512,
-            cpu=256
-        )
+        # web_container = fargate_task_definition.add_container("WebContainer",
+        #     image=ecs.ContainerImage.from_registry("038445823716.dkr.ecr.ap-northeast-2.amazonaws.com/web:latest"),
+        #     logging=ecs.LogDrivers.aws_logs(stream_prefix="observation-log-stream"),
+        #     port_mappings=[{"containerPort": 80}], # it makes me crazy!!!
+        #     memory_limit_mib=512,
+        #     cpu=256
+        # )
         
-        # Instantiate an Amazon ECS Service
-        ecs_service = ecs.FargateService(self, "ECSService",
-            cluster=cluster,
-            task_definition=fargate_task_definition,
-            desired_count=3
-        )
+        # # Instantiate an Amazon ECS Service
+        # ecs_service = ecs.FargateService(self, "ECSService",
+        #     cluster=cluster,
+        #     task_definition=fargate_task_definition,
+        #     desired_count=3
+        # )
 
         # lb = elbv2.ApplicationLoadBalancer(self, "ServiceLB", vpc=bmt_vpc, internet_facing=True)
         # listener = lb.add_listener("Listener", port=80)
