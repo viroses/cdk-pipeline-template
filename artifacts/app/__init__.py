@@ -11,6 +11,9 @@ class Application(core.NestedStack):
     def __init__(self, scope: core.Construct, id: str, bmt_vpc: ec2.Vpc, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
         
+        # target group 생성 - IP로
+        # ALB 생성
+        
         cluster = ecs.Cluster(self,"ObservationCluster",
             enable_fargate_capacity_providers=True,
             vpc=bmt_vpc
@@ -36,15 +39,15 @@ class Application(core.NestedStack):
             desired_count=3
         )
 
-        # lb = elbv2.ApplicationLoadBalancer(self, "ServiceLB", vpc=bmt_vpc, internet_facing=True)
-        # listener = lb.add_listener("Listener", port=80)
-        # ecs_service.register_load_balancer_targets(
-        # ecs.EcsTarget(
-        #         container_name="WebContainer",
-        #         container_port=80,
-        #         new_target_group_id="ECSTarget",
-        #         listener=ecs.ListenerConfig.application_listener(listener,
-        #             protocol=elbv2.ApplicationProtocol.HTTP
-        #         )
-        #     )
-        # )
+        lb = elbv2.ApplicationLoadBalancer(self, "ServiceLB", vpc=bmt_vpc, internet_facing=True)
+        listener = lb.add_listener("Listener", port=80)
+        ecs_service.register_load_balancer_targets(
+        ecs.EcsTarget(
+                container_name="WebContainer",
+                container_port=80,
+                new_target_group_id="ECSTarget",
+                listener=ecs.ListenerConfig.application_listener(listener,
+                    protocol=elbv2.ApplicationProtocol.HTTP
+                )
+            )
+        )
