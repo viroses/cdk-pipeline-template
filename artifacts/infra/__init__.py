@@ -17,11 +17,11 @@ class Network(core.NestedStack):
                     name='isolated',
                     subnet_type=ec2.SubnetType.ISOLATED,
                     cidr_mask=24
-                ).add_route(),
+                ),
                 ec2.SubnetConfiguration(
                     name='public',
                     subnet_type=ec2.SubnetType.PUBLIC,
                     cidr_mask=24)
             ]
         )
-        # Private subnet의 route table을 NAT GW로 필요.
+        # Private subnet의 route table을 NAT GW로변경
